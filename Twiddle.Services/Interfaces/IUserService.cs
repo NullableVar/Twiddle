@@ -9,4 +9,6 @@ public interface IUserService
     public Task<UserModel?> GetByIdAsync(Guid id);
     
     public Task<bool> LoginAsync(UserModel userModel);
+
+    public Task<UserModel?> GetByEmailAsync(string email);
 }

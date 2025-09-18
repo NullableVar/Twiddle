@@ -224,6 +224,10 @@
         if (success)
         {
             await LocalStorage.SetItemAsStringAsync("authToken", tokenOrMessage);
+            if (!string.IsNullOrWhiteSpace(loginModel.Email))
+            {
+                await LocalStorage.SetItemAsStringAsync("userEmail", loginModel.Email);
+            }
             Navigation.NavigateTo("/home", forceLoad: true);
         }
         else

@@ -39,4 +39,16 @@ public class TwiddleApiClient
         var body = await resp.Content.ReadAsStringAsync();
         return (resp.IsSuccessStatusCode, body);
     }
+    
+    public async Task<(bool, string)> GetUserByEmailAsync(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return (false, "Email must be provided");
+
+        var encoded = System.Net.WebUtility.UrlEncode(email.Trim());
+        var response = await _httpClient.GetAsync($"user/by-email?email={encoded}");
+        var content = await response.Content.ReadAsStringAsync();
+
+        return (response.IsSuccessStatusCode, content);
+    }
 }

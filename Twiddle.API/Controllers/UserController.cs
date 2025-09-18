@@ -42,6 +42,20 @@ public class UserController(IUserService _userService, ITokenProvider _tokenProv
         var user = await _userService.GetByIdAsync(id);
         return user is null ? NotFound() : Ok(user);
     }
+    
+    
+    [HttpGet("by-email")]
+    public async Task<IActionResult> GetByEmail([FromQuery] string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return BadRequest("Email must be provided.");
+
+        var user = await _userService.GetByEmailAsync(email);
+        if (user is null)
+            return NotFound("User not found.");
+
+        return Ok(user);
+    }
 }
 
 public sealed class LoginRequest

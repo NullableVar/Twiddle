@@ -30,6 +30,11 @@ internal class UserService(IUserDao _userDao) : IUserService
         return userToLogin.Password == EncryptPassword(userModel.Password!);
     }
     
+    public async Task<UserModel?> GetByEmailAsync(string email)
+    {
+        return await _userDao.GetByEmailAsync(email);
+    }
+    
     private string EncryptPassword(string password)
     {
         using var sha256 = SHA256.Create();
