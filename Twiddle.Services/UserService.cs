@@ -14,6 +14,11 @@ internal class UserService(IUserDao _userDao) : IUserService
         await _userDao.CreateAsync(userModel);
         return await Task.FromResult(true);
     }
+    
+    public async Task<UserModel?> GetByIdAsync(Guid id)
+    {
+        return await _userDao.GetByIdAsync(id);
+    }
 
     public async Task<bool> LoginAsync(UserModel userModel)
     {
@@ -22,7 +27,7 @@ internal class UserService(IUserDao _userDao) : IUserService
         if (userToLogin == null) 
             return await Task.FromResult(false);
         
-        return await Task.FromResult(userToLogin.Password == EncryptPassword(userModel.Password!));
+        return userToLogin.Password == EncryptPassword(userModel.Password!);
     }
     
     private string EncryptPassword(string password)

@@ -1,6 +1,9 @@
 ﻿@page "/register"
 @using Twiddle.Components.ViewModels
+@using Twiddle.Models
 @inject NavigationManager NavManager
+@inject Twiddle.Core.TwiddleApiClient ApiClient
+@rendermode InteractiveServer
 
 <style>
     body {
@@ -110,34 +113,43 @@
 
 <div class="register-container">
     <h2>Register</h2>
-    <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+    <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister" FormName="RegisterForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
         <div>
             <label>Username</label>
-            <InputText @bind-Value="registerModel.Username" />
+            <InputText @bind-Value="registerModel.Username" autocomplete="username" />
             <ValidationMessage For="@(() => registerModel.Username)" />
         </div>
-        
+
         <div>
             <label>Email</label>
-            <InputText @bind-Value="registerModel.Email" type="email" />
+            <InputText @bind-Value="registerModel.Email" type="email" autocomplete="email" />
             <ValidationMessage For="@(() => registerModel.Email)" />
         </div>
+
         <div>
             <label>Password</label>
-            <InputText @bind-Value="registerModel.Password" type="password" />
+            <InputText @bind-Value="registerModel.Password" type="password" autocomplete="new-password" />
             <ValidationMessage For="@(() => registerModel.Password)" />
         </div>
+
         <div>
             <label>Confirm Password</label>
-            <InputText @bind-Value="registerModel.ConfirmPassword" type="password" />
+            <InputText @bind-Value="registerModel.ConfirmPassword" type="password" autocomplete="new-password" />
             <ValidationMessage For="@(() => registerModel.ConfirmPassword)" />
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled="@isSubmitting">
+            @(isSubmitting ? "Registering..." : "Register")
+        </button>
     </EditForm>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <p class="@messageClass">@message</p>
+    }
 
     <div class="signin-link">
         <p>Already registered? <a href="/login">Sign In!</a></p>
@@ -146,13 +158,47 @@
 
 @code {
     private RegisterViewModel registerModel = new();
+    private string? message;
+    private string messageClass = "text-danger";
+    private bool isSubmitting = false;
 
     private async Task HandleRegister()
     {
-        // Example logic – replace with your real registration/auth service
-        Console.WriteLine($"Email: {registerModel.Email}, Password: {registerModel.Password}");
+        if (isSubmitting) return;
+        isSubmitting = true;
+        message = null;
 
-        // Example: navigate after success
-        // NavigationManager.NavigateTo("/login");
+        try
+        {
+            var userModel = new UserModel
+            {
+                Name = registerModel.Username,
+                Email = registerModel.Email,
+                Password = registerModel.Password
+                // Id and CreatedAt are set by server (or ignored) on register
+            };
+
+            var (success, responseMessage) = await ApiClient.RegisterAsync(userModel);
+
+            if (success)
+            {
+                message = "Registration successful! Redirecting to login...";
+                messageClass = "text-success";
+
+                await Task.Delay(1200);
+                NavManager.NavigateTo("/login", forceLoad: true);
+            }
+            else
+            {
+                message = string.IsNullOrWhiteSpace(responseMessage)
+                    ? "Registration failed."
+                    : responseMessage;
+                messageClass = "text-danger";
+            }
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
     }
 }

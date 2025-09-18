@@ -10,25 +10,49 @@ namespace Twiddle.API.Controllers;
 public class UserController(IUserService _userService, ITokenProvider _tokenProvider) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserModel userModel)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var result = await _userService.RegisterAsync(userModel);
-        
-        if (!result) 
-            return BadRequest("User already exists.");
+        var user = new UserModel
+        {
+            Name = request.Name,
+            Email = request.Email,
+            Password = request.Password
+        };
+
+        var result = await _userService.RegisterAsync(user);
+        if (!result) return BadRequest("User already exists.");
 
         return Ok("User created.");
     }
-    
+
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserModel userModel)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var result = await _userService.LoginAsync(userModel);
-        
-        if (!result) 
-            return BadRequest("Wrong login data.");
-        
-        var token = _tokenProvider.Create(userModel);
+        var tmp = new UserModel { Email = request.Email, Password = request.Password };
+        var ok = await _userService.LoginAsync(tmp);
+        if (!ok) return BadRequest("Wrong login data.");
+
+        var token = _tokenProvider.Create(tmp);
         return Ok(token);
     }
+    
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var user = await _userService.GetByIdAsync(id);
+        return user is null ? NotFound() : Ok(user);
+    }
+}
+
+public sealed class LoginRequest
+{
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+
+public sealed class RegisterRequest
+{
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }

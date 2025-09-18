@@ -15,7 +15,7 @@ public class TwiddleApiClient
 
     public async Task<(bool, string)> LoginAsync(UserModel userModel)
     {
-        var responseMessage = await _httpClient.PostAsJsonAsync("user/login", userModel);
+        var responseMessage = await _httpClient.PostAsJsonAsync("api/User/login", userModel);
 
         if (responseMessage.IsSuccessStatusCode)
             return (true, await responseMessage.Content.ReadAsStringAsync());
@@ -25,11 +25,18 @@ public class TwiddleApiClient
 
     public async Task<(bool, string)> RegisterAsync(UserModel userModel)
     {
-        var responseMessage = await _httpClient.PostAsJsonAsync("user/register", userModel);
+        var responseMessage = await _httpClient.PostAsJsonAsync("api/User/register", userModel);
 
         if (responseMessage.IsSuccessStatusCode)
             return (true, await responseMessage.Content.ReadAsStringAsync());
         
         return (false, await responseMessage.Content.ReadAsStringAsync());
+    }
+    
+    public async Task<(bool, string)> GetUserByIdAsync(Guid id)
+    {
+        var resp = await _httpClient.GetAsync($"api/user/{id}");
+        var body = await resp.Content.ReadAsStringAsync();
+        return (resp.IsSuccessStatusCode, body);
     }
 }
