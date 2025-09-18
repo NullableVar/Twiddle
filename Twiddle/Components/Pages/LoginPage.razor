@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/login"
 @using Twiddle.Components.ViewModels
+@using Twiddle.Core
 @inject NavigationManager NavManager
 
 <style>
@@ -221,10 +222,7 @@
 
     private async Task HandleLogin()
     {
-        // Example: Replace with your authentication logic
-        Console.WriteLine($"Email: {loginModel.Email}, Password: {loginModel.Password}, RememberMe: {loginModel.RememberMe}");
-        
-        // Example redirect after successful login
-        // NavigationManager.NavigateTo("/");
+        var client = new TwiddleApiClient();
+        //var response = await client.LoginAsync(loginModel.Email, loginModel.Password, loginModel.RememberMe);
     }
 }

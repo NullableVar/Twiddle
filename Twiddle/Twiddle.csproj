@@ -12,4 +12,8 @@
     <Resource Include="wwwroot\Images\Twiddle_Logo.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Twiddle.Models\Twiddle.Models.csproj" />
+  </ItemGroup>
+
 </Project>
