@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twiddle", "Twiddle\Twiddle.csproj", "{007F4C47-F935-4413-81BE-7D525C4EC16E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twiddle.Services", "Twiddle.Services\Twiddle.Services.csproj", "{0CF5C35A-062C-481A-AF34-E5CC74DEED92}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB423298-260E-4223-A992-19464AE45E2D} = {DB423298-260E-4223-A992-19464AE45E2D}
+		{F526A325-9EA7-44FA-8E9F-C392494582B3} = {F526A325-9EA7-44FA-8E9F-C392494582B3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twiddle.DataAccess", "Twiddle.DataAccess\Twiddle.DataAccess.csproj", "{DB423298-260E-4223-A992-19464AE45E2D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F526A325-9EA7-44FA-8E9F-C392494582B3} = {F526A325-9EA7-44FA-8E9F-C392494582B3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twiddle.Models", "Twiddle.Models\Twiddle.Models.csproj", "{F526A325-9EA7-44FA-8E9F-C392494582B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twiddle.API", "Twiddle.API\Twiddle.API.csproj", "{70A6A997-FD45-4417-8BDB-86CFDF7445F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0CF5C35A-062C-481A-AF34-E5CC74DEED92} = {0CF5C35A-062C-481A-AF34-E5CC74DEED92}
+		{DB423298-260E-4223-A992-19464AE45E2D} = {DB423298-260E-4223-A992-19464AE45E2D}
+		{F526A325-9EA7-44FA-8E9F-C392494582B3} = {F526A325-9EA7-44FA-8E9F-C392494582B3}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{007F4C47-F935-4413-81BE-7D525C4EC16E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{007F4C47-F935-4413-81BE-7D525C4EC16E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{007F4C47-F935-4413-81BE-7D525C4EC16E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{007F4C47-F935-4413-81BE-7D525C4EC16E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CF5C35A-062C-481A-AF34-E5CC74DEED92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CF5C35A-062C-481A-AF34-E5CC74DEED92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CF5C35A-062C-481A-AF34-E5CC74DEED92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CF5C35A-062C-481A-AF34-E5CC74DEED92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB423298-260E-4223-A992-19464AE45E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB423298-260E-4223-A992-19464AE45E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB423298-260E-4223-A992-19464AE45E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB423298-260E-4223-A992-19464AE45E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F526A325-9EA7-44FA-8E9F-C392494582B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F526A325-9EA7-44FA-8E9F-C392494582B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F526A325-9EA7-44FA-8E9F-C392494582B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F526A325-9EA7-44FA-8E9F-C392494582B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70A6A997-FD45-4417-8BDB-86CFDF7445F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70A6A997-FD45-4417-8BDB-86CFDF7445F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70A6A997-FD45-4417-8BDB-86CFDF7445F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70A6A997-FD45-4417-8BDB-86CFDF7445F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BDBBEAA7-6709-4BF6-9AAC-9FEFAD62950F}
+	EndGlobalSection
+EndGlobal

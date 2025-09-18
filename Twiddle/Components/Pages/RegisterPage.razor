@@ -1,0 +1,158 @@
+﻿@page "/register"
+@using Twiddle.Components.ViewModels
+@inject NavigationManager NavManager
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #fffbf0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .register-container {
+        background: #fefdf8;
+        padding: 40px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    form div {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #FFB300;
+        box-shadow: 0 0 5px rgba(255, 179, 0, 0.5);
+    }
+
+    span {
+        font-size: 12px;
+        color: #e74c3c;
+        margin-top: 5px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #FFB300;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+        background: #FF8F00;
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .signin-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .signin-link p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .signin-link a {
+        color: #FFB300;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .signin-link a:hover {
+        color: #FF8F00;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="register-container">
+    <h2>Register</h2>
+    <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Username</label>
+            <InputText @bind-Value="registerModel.Username" />
+            <ValidationMessage For="@(() => registerModel.Username)" />
+        </div>
+        
+        <div>
+            <label>Email</label>
+            <InputText @bind-Value="registerModel.Email" type="email" />
+            <ValidationMessage For="@(() => registerModel.Email)" />
+        </div>
+        <div>
+            <label>Password</label>
+            <InputText @bind-Value="registerModel.Password" type="password" />
+            <ValidationMessage For="@(() => registerModel.Password)" />
+        </div>
+        <div>
+            <label>Confirm Password</label>
+            <InputText @bind-Value="registerModel.ConfirmPassword" type="password" />
+            <ValidationMessage For="@(() => registerModel.ConfirmPassword)" />
+        </div>
+
+        <button type="submit">Register</button>
+    </EditForm>
+
+    <div class="signin-link">
+        <p>Already registered? <a href="/login">Sign In!</a></p>
+    </div>
+</div>
+
+@code {
+    private RegisterViewModel registerModel = new();
+
+    private async Task HandleRegister()
+    {
+        // Example logic – replace with your real registration/auth service
+        Console.WriteLine($"Email: {registerModel.Email}, Password: {registerModel.Password}");
+
+        // Example: navigate after success
+        // NavigationManager.NavigateTo("/login");
+    }
+}

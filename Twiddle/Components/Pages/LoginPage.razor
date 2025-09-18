@@ -1,0 +1,229 @@
+﻿@page "/"
+@page "/login"
+@using Twiddle.Components.ViewModels
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #fffbf0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .main-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        max-width: 900px;
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .logo-card {
+        background: #ffffff;
+        padding: 60px 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        width: 300px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .login-container {
+        background: #fefdf8;
+        padding: 40px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        width: 100%;
+        max-width: 400px;
+        flex-shrink: 0;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    form div {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+        outline: none;
+        border-color: #FFB300;
+        box-shadow: 0 0 5px rgba(255, 179, 0, 0.5);
+    }
+
+    .checkbox-container {
+        flex-direction: row !important;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+        margin-right: 8px;
+        width: 16px;
+        height: 16px;
+        accent-color: #FFB300;
+    }
+
+    .checkbox-container label {
+        margin-bottom: 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    span {
+        font-size: 12px;
+        color: #e74c3c;
+        margin-top: 5px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #FFB300;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+        background: #FF8F00;
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .register-link p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .register-link a {
+        color: #FFB300;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .register-link a:hover {
+        color: #FF8F00;
+        text-decoration: underline;
+    }
+
+    @@media (max-width: 768px) {
+        .main-container {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .logo-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        .logo-card img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .login-container {
+            max-width: 400px;
+        }
+    }
+</style>
+
+<div class="main-container">
+    <div class="logo-card">
+        <img src="Images/Twiddle_Logo.png" alt="Twiddle Logo" style="max-width: 100%; max-height: 100%;" />
+    </div>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div>
+                <label>Email</label>
+                <InputText @bind-Value="loginModel.Email" type="email" class="form-control" />
+                <ValidationMessage For="@(() => loginModel.Email)" />
+            </div>
+            <div>
+                <label>Password</label>
+                <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
+            <div class="checkbox-container">
+                <InputCheckbox @bind-Value="loginModel.RememberMe" />
+                <label>Remember Me</label>
+            </div>
+            <button type="submit">Login</button>
+        </EditForm>
+
+        <div class="register-link">
+            <p>Don't have an account? <a href="/register">Sign Up!</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginViewModel loginModel = new();
+
+    private async Task HandleLogin()
+    {
+        // Example: Replace with your authentication logic
+        Console.WriteLine($"Email: {loginModel.Email}, Password: {loginModel.Password}, RememberMe: {loginModel.RememberMe}");
+        
+        // Example redirect after successful login
+        // NavigationManager.NavigateTo("/");
+    }
+}
