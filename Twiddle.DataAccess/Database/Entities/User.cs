@@ -6,6 +6,11 @@ internal class User
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
+    
+    [Required]
+    [MinLength(3)]
+    [MaxLength(20)]
+    public string Username { get; set; } = null!;
 
     [Required]
     [EmailAddress]

@@ -12,9 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\Daos\" />
     <Folder Include="Database\Interfaces\" />
-    <Folder Include="Database\Mappers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Twiddle.Models\Twiddle.Models.csproj" />
   </ItemGroup>
 
 </Project>
