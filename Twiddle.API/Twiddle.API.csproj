@@ -16,7 +16,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Core\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Twiddle.Models\Twiddle.Models.csproj" />
   </ItemGroup>
 
 </Project>
