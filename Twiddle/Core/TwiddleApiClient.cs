@@ -1,4 +1,5 @@
-﻿using Twiddle.Models;
+﻿using System.Net.Http.Json;
+using Twiddle.Models;
 
 namespace Twiddle.Core;
 
@@ -12,7 +13,7 @@ public class TwiddleApiClient
         _httpClient.BaseAddress = new Uri(Constants.ClientBaseAddress);
     }
 
-    public async Task<(bool,string)> LoginAsync(UserModel userModel)
+    public async Task<(bool, string)> LoginAsync(UserModel userModel)
     {
         var responseMessage = await _httpClient.PostAsJsonAsync("user/login", userModel);
 
@@ -22,8 +23,13 @@ public class TwiddleApiClient
         return (false, await responseMessage.Content.ReadAsStringAsync());
     }
 
-    public async Task RegisterAsync(UserModel userModel)
+    public async Task<(bool, string)> RegisterAsync(UserModel userModel)
     {
+        var responseMessage = await _httpClient.PostAsJsonAsync("user/register", userModel);
+
+        if (responseMessage.IsSuccessStatusCode)
+            return (true, await responseMessage.Content.ReadAsStringAsync());
         
+        return (false, await responseMessage.Content.ReadAsStringAsync());
     }
 }

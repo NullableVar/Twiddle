@@ -1,8 +1,9 @@
-﻿@page "/"
-@page "/login"
-@using Twiddle.Components.ViewModels
-@using Twiddle.Core
-@inject NavigationManager NavManager
+﻿@page "/login"
+@page "/"
+@using Twiddle.Models
+@inject NavigationManager Navigation
+@inject Twiddle.Core.TwiddleApiClient ApiClient
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <style>
     body {
@@ -80,25 +81,6 @@
         box-shadow: 0 0 5px rgba(255, 179, 0, 0.5);
     }
 
-    .checkbox-container {
-        flex-direction: row !important;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .checkbox-container input[type="checkbox"] {
-        margin-right: 8px;
-        width: 16px;
-        height: 16px;
-        accent-color: #FFB300;
-    }
-
-    .checkbox-container label {
-        margin-bottom: 0;
-        font-size: 14px;
-        color: #555;
-    }
-
     span {
         font-size: 12px;
         color: #e74c3c;
@@ -158,14 +140,7 @@
         }
 
         .logo-card {
-            background: #ffffff;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
             max-width: 200px;
             max-height: 200px;
         }
@@ -185,44 +160,58 @@
 
 <div class="main-container">
     <div class="logo-card">
-        <img src="Images/Twiddle_Logo.png" alt="Twiddle Logo" style="max-width: 100%; max-height: 100%;" />
+        <img src="Images/Twiddle_Logo.png" alt="App Logo"/>
     </div>
 
     <div class="login-container">
         <h2>Login</h2>
-        <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+
+        <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin" FormName="LoginForm">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
 
             <div>
                 <label>Email</label>
-                <InputText @bind-Value="loginModel.Email" type="email" class="form-control" />
-                <ValidationMessage For="@(() => loginModel.Email)" />
+                <InputText @bind-Value="loginModel.Email" type="email"/>
+                <ValidationMessage For="@(() => loginModel.Email)"/>
             </div>
+
             <div>
                 <label>Password</label>
-                <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
-                <ValidationMessage For="@(() => loginModel.Password)" />
+                <InputText @bind-Value="loginModel.Password" type="password"/>
+                <ValidationMessage For="@(() => loginModel.Password)"/>
             </div>
-            <div class="checkbox-container">
-                <InputCheckbox @bind-Value="loginModel.RememberMe" />
-                <label>Remember Me</label>
-            </div>
+
             <button type="submit">Login</button>
         </EditForm>
 
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="text-danger">@errorMessage</p>
+        }
+
         <div class="register-link">
-            <p>Don't have an account? <a href="/register">Sign Up!</a></p>
+            <p>No account? <a href="/register">Register here</a></p>
         </div>
     </div>
 </div>
 
 @code {
-    private LoginViewModel loginModel = new();
+    private UserModel loginModel = new();
+    private string? errorMessage;
 
     private async Task HandleLogin()
     {
-        var client = new TwiddleApiClient();
-        //var response = await client.LoginAsync(loginModel.Email, loginModel.Password, loginModel.RememberMe);
+        var (success, tokenOrMessage) = await ApiClient.LoginAsync(loginModel);
+
+        if (success)
+        {
+            await LocalStorage.SetItemAsStringAsync("authToken", tokenOrMessage);
+            Navigation.NavigateTo("/home", forceLoad: true);
+        }
+        else
+        {
+            errorMessage = tokenOrMessage;
+        }
     }
 }
