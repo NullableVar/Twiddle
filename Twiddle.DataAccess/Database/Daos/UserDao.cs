@@ -23,6 +23,14 @@ internal class UserDao(IMapper<UserModel, User> _userMapper, IMapper<User, UserM
         return userToReturn == null ? null : _userModelMapper.Map(userToReturn);
     }
 
+    public async Task<UserModel?> GetByEmailAsync(string email)
+    {
+        await using var context = new TwiddleDb();
+        
+        var userToReturn = context.Users.FirstOrDefault(u => u.Email == email);
+        return userToReturn == null ? null : _userModelMapper.Map(userToReturn);
+    }
+
     public async Task<IList<UserModel>> GetAllAsync()
     {
         await using var context = new TwiddleDb();

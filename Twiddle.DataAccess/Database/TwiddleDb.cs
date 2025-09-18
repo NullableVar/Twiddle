@@ -3,7 +3,7 @@ using Twiddle.DataAccess.Database.Entities;
 
 namespace Twiddle.DataAccess.Database;
 
-internal class TwiddleDb : DbContext
+public class TwiddleDb : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

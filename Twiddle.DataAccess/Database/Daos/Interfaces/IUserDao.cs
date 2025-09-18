@@ -8,6 +8,8 @@ public interface IUserDao
     
     Task<UserModel?> GetByIdAsync(Guid id);
     
+    Task<UserModel?> GetByEmailAsync(string email);
+    
     Task<IList<UserModel>> GetAllAsync();
     
     Task UpdateAsync(UserModel model);

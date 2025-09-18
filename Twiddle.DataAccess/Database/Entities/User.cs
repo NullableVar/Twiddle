@@ -2,7 +2,7 @@
 
 namespace Twiddle.DataAccess.Database.Entities;
 
-internal class User
+public class User
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();

@@ -2,7 +2,7 @@
 
 namespace Twiddle.DataAccess.Database.Entities;
 
-internal class RefreshToken
+public class RefreshToken
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
