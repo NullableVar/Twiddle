@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Twiddle.API.Core;
 using Twiddle.DataAccess.Database;
+using Twiddle.Models;
 using Twiddle.Services;
 
 var builder = WebApplication.CreateBuilder(args);
