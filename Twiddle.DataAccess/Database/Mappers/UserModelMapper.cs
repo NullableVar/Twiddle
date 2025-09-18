@@ -13,6 +13,7 @@ internal class UserModelMapper : IMapper<User, UserModel>
             Id = source.Id,
             Email = source.Email,
             Name = source.Username,
+            Password = source.PasswordHash,
             CreatedAt = source.CreatedAt
         };
     }
