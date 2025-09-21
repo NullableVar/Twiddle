@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Twiddle.DataAccess\Twiddle.DataAccess.csproj" />
     <ProjectReference Include="..\Twiddle.Models\Twiddle.Models.csproj" />
     <ProjectReference Include="..\Twiddle.Services\Twiddle.Services.csproj" />

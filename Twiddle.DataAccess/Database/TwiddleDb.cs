@@ -11,5 +11,6 @@ public class TwiddleDb : DbContext
     }
     
     public DbSet<User> Users { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; } 
+    
+    public DbSet<Twid> Twids { get; set; } 
 }

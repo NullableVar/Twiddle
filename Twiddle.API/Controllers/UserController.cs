@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Twiddle.API.Controllers.Requests;
 using Twiddle.API.Core;
 using Twiddle.Models;
 using Twiddle.Services.Interfaces;
@@ -56,17 +57,4 @@ public class UserController(IUserService _userService, ITokenProvider _tokenProv
 
         return Ok(user);
     }
-}
-
-public sealed class LoginRequest
-{
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-}
-
-public sealed class RegisterRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }
