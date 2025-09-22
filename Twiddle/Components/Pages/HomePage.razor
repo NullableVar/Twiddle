@@ -26,21 +26,24 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="main-content">
+        <!-- Sidebar -->
         <div class="sidebar">
+            <!-- Create Twid Section -->
             <div class="create-twid-card">
                 <h3>What's happening?</h3>
                 <EditForm Model="@newTwid" OnValidSubmit="@HandleCreateTwid" FormName="CreateTwidForm">
                     <DataAnnotationsValidator/>
                     <ValidationSummary/>
-                    
+
                     <div class="twid-input-container">
-                        <InputTextArea @bind-Value="newTwid.Text" 
-                                       placeholder="Share your thoughts..." 
+                        <InputTextArea @bind-Value="newTwid.Text"
+                                       placeholder="Share your thoughts..."
                                        class="twid-textarea"/>
                         <ValidationMessage For="@(() => newTwid.Text)"/>
                     </div>
-                    
+
                     <div class="twid-actions">
                         <span class="character-count">@(newTwid.Text?.Length ?? 0)/1024</span>
                         <button type="submit" class="twid-submit-btn" disabled="@isSubmitting">
@@ -58,12 +61,15 @@
             </div>
         </div>
 
+        <!-- Feed Content -->
         <div class="feed-content">
+            <!-- Error Message -->
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="error-message">@errorMessage</div>
             }
 
+            <!-- Success Message -->
             @if (!string.IsNullOrEmpty(successMessage))
             {
                 <div class="success-message">@successMessage</div>
@@ -72,7 +78,7 @@
             <!-- Twids Feed -->
             <div class="twids-container">
                 <h3>Latest Twids</h3>
-                
+
                 @if (isLoadingTwids)
                 {
                     <div class="loading">Loading twids...</div>
@@ -84,7 +90,7 @@
                         <div class="twid-card">
                             <div class="twid-header">
                                 <span class="twid-user">
-                                    User: @GetUsernameForTwid(twid.UserId)
+                                    @GetUsernameForTwid(twid.UserId)
                                 </span>
                                 <span class="twid-date">@twid.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
                             </div>
@@ -108,18 +114,18 @@
 <style>
     .home-container {
         min-height: 100vh;
-        background: #f8f9fa;
+        background: #fffbf0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .home-header {
         background: #ffffff;
-        padding: 1rem 3rem;
+        padding: 20px 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        border-bottom: 1px solid #dee2e6;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        border-bottom: 1px solid #eee;
         position: sticky;
         top: 0;
         z-index: 100;
@@ -128,16 +134,16 @@
     .header-left {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 15px;
     }
 
     .header-logo {
-        height: 35px;
+        height: 40px;
         width: auto;
     }
 
     .header-left h1 {
-        color: #495057;
+        color: #333;
         margin: 0;
         font-size: 1.6rem;
         font-weight: 600;
@@ -145,101 +151,103 @@
 
     .header-right {
         display: flex;
-        gap: 0.75rem;
+        gap: 10px;
         align-items: center;
     }
 
     .profile-btn, .logout-btn {
-        padding: 0.5rem 1.25rem;
-        border: 1px solid;
-        border-radius: 6px;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 8px;
         cursor: pointer;
         font-weight: 500;
-        font-size: 0.875rem;
-        transition: all 0.2s ease;
+        font-size: 14px;
+        transition: background 0.3s, transform 0.2s;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 8px;
         text-decoration: none;
     }
 
     .profile-btn {
-        background: #007bff;
-        color: white;
-        border-color: #007bff;
+        background: #FFB300;
+        color: #fff;
     }
 
     .profile-btn:hover {
-        background: #0056b3;
-        border-color: #0056b3;
+        background: #FF8F00;
+        transform: translateY(-2px);
     }
 
     .logout-btn {
         background: transparent;
-        color: #dc3545;
-        border-color: #dc3545;
+        color: #FFB300;
+        border: 1px solid #FFB300;
     }
 
     .logout-btn:hover {
-        background: #dc3545;
-        color: white;
+        background: #FFB300;
+        color: #fff;
+        transform: translateY(-2px);
     }
 
     .profile-icon {
-        font-size: 1rem;
+        font-size: 16px;
     }
 
     .main-content {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 2rem 3rem;
+        padding: 40px 20px;
         display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 2rem;
+        grid-template-columns: 350px 1fr;
+        gap: 30px;
         align-items: start;
     }
 
     .sidebar {
         position: sticky;
-        top: 100px;
+        top: 120px;
     }
 
     .create-twid-card {
-        background: #ffffff;
-        border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #dee2e6;
-        margin-bottom: 1.5rem;
+        background: #fefdf8;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        margin-bottom: 20px;
     }
 
     .create-twid-card h3 {
-        color: #495057;
-        margin: 0 0 1rem 0;
-        font-size: 1.2rem;
+        color: #333;
+        margin: 0 0 20px 0;
+        font-size: 18px;
         font-weight: 600;
+        text-align: center;
     }
 
     .twid-input-container {
-        margin-bottom: 1rem;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
     }
 
     .twid-textarea {
         width: 100%;
-        min-height: 80px;
-        padding: 0.75rem;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        font-size: 0.875rem;
+        min-height: 100px;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
         font-family: inherit;
         resize: vertical;
-        transition: border-color 0.15s ease;
+        transition: border 0.3s, box-shadow 0.3s;
     }
 
     .twid-textarea:focus {
         outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+        border-color: #FFB300;
+        box-shadow: 0 0 5px rgba(255, 179, 0, 0.5);
     }
 
     .twid-actions {
@@ -249,64 +257,71 @@
     }
 
     .character-count {
-        color: #6c757d;
-        font-size: 0.8rem;
+        font-size: 12px;
+        color: #666;
     }
 
     .twid-submit-btn {
-        background: #007bff;
-        color: white;
-        border: 1px solid #007bff;
-        padding: 0.5rem 1.25rem;
-        border-radius: 4px;
+        background: #FFB300;
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
         font-weight: 500;
-        font-size: 0.875rem;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: background 0.3s, transform 0.2s;
     }
 
     .twid-submit-btn:hover:not(:disabled) {
-        background: #0056b3;
-        border-color: #0056b3;
+        background: #FF8F00;
+        transform: translateY(-2px);
+    }
+
+    .twid-submit-btn:active {
+        transform: translateY(0);
     }
 
     .twid-submit-btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+        transform: none;
     }
 
     .feed-content {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 20px;
     }
 
     .twids-container {
-        background: #ffffff;
-        border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #dee2e6;
+        background: #fefdf8;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
     }
 
     .twids-container h3 {
-        color: #495057;
-        margin: 0 0 1.5rem 0;
-        font-size: 1.2rem;
+        color: #333;
+        margin: 0 0 25px 0;
+        font-size: 18px;
         font-weight: 600;
+        text-align: center;
     }
 
     .twid-card {
         background: #ffffff;
-        border-radius: 4px;
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        border: 1px solid #dee2e6;
-        transition: border-color 0.15s ease;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.1);
+        border: 1px solid #eee;
+        transition: transform 0.2s, box-shadow 0.3s;
     }
 
     .twid-card:hover {
-        border-color: #adb5bd;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(255, 179, 0, 0.2);
     }
 
     .twid-card:last-child {
@@ -317,60 +332,60 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.75rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
     }
 
     .twid-user {
         font-weight: 600;
-        color: #495057;
-        font-size: 0.875rem;
+        color: #555;
+        font-size: 14px;
     }
 
     .twid-date {
-        color: #6c757d;
-        font-size: 0.75rem;
+        color: #666;
+        font-size: 12px;
     }
 
     .twid-content {
-        color: #212529;
+        color: #333;
         line-height: 1.5;
-        font-size: 0.9rem;
+        font-size: 14px;
     }
 
     .loading, .no-twids {
         text-align: center;
-        padding: 2rem;
-        color: #6c757d;
+        padding: 40px 20px;
+        color: #666;
         font-style: italic;
-        font-size: 0.9rem;
+        font-size: 14px;
     }
 
     .error-message {
         background: #f8d7da;
-        color: #721c24;
-        padding: 0.75rem 1rem;
-        border-radius: 4px;
+        color: #e74c3c;
+        padding: 12px 15px;
+        border-radius: 8px;
         border: 1px solid #f5c6cb;
-        margin-bottom: 1rem;
-        font-size: 0.875rem;
+        margin-bottom: 20px;
+        font-size: 14px;
     }
 
     .success-message {
-        background: #d1edff;
-        color: #0c5460;
-        padding: 0.75rem 1rem;
-        border-radius: 4px;
-        border: 1px solid #bee5eb;
-        margin-bottom: 1rem;
-        font-size: 0.875rem;
+        background: #fff3cd;
+        color: #856404;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid #ffeaa7;
+        margin-bottom: 20px;
+        font-size: 14px;
     }
 
     @@media (max-width: 992px) {
         .main-content {
             grid-template-columns: 1fr;
-            padding: 1.5rem 2rem;
+            padding: 30px 20px;
         }
 
         .sidebar {
@@ -380,9 +395,9 @@
 
     @@media (max-width: 768px) {
         .home-header {
-            padding: 1rem 1.5rem;
+            padding: 20px;
             flex-direction: column;
-            gap: 1rem;
+            gap: 15px;
         }
 
         .header-left h1 {
@@ -390,16 +405,17 @@
         }
 
         .main-content {
-            padding: 1rem;
+            padding: 20px;
+            gap: 20px;
         }
 
         .create-twid-card, .twids-container {
-            padding: 1rem;
+            padding: 20px;
         }
 
         .twid-actions {
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 15px;
             align-items: stretch;
         }
 
@@ -407,6 +423,7 @@
             width: 100%;
         }
     }
+
 </style>
 
 @code {
@@ -430,10 +447,10 @@
                 return;
             }
 
-            var userIdStr = await LocalStorage.GetItemAsStringAsync("userId");
-            if (Guid.TryParse(userIdStr, out var userId))
+            var email = await LocalStorage.GetItemAsStringAsync("userEmail");
+            if (!string.IsNullOrWhiteSpace(email))
             {
-                var (success, response) = await UserApiClient.GetUserByIdAsync(userId);
+                var (success, response) = await UserApiClient.GetUserByEmailAsync(email);
                 if (success)
                 {
                     var user = JsonSerializer.Deserialize<UserModel>(response, new JsonSerializerOptions
@@ -444,6 +461,7 @@
                     {
                         currentUsername = user.Name;
                         userCache[user.Id] = user.Name;
+                        await LocalStorage.SetItemAsStringAsync("userId", user.Id.ToString());
                     }
                 }
             }
@@ -462,7 +480,7 @@
         {
             isLoadingTwids = true;
             var (success, response) = await TwidApiClient.GetAllAsync();
-            
+
             if (success)
             {
                 twids = JsonSerializer.Deserialize<List<TwidModel>>(response, new JsonSerializerOptions
@@ -530,10 +548,9 @@
                 return;
             }
 
+            // ensure current user in cache
             if (!string.IsNullOrEmpty(currentUsername))
-            {
                 userCache[userId] = currentUsername;
-            }
 
             var twidModel = new TwidModel
             {
@@ -549,7 +566,6 @@
             {
                 successMessage = "Twid posted successfully!";
                 newTwid = new TwidViewModel();
-            
                 await LoadTwids();
 
                 _ = Task.Delay(3000).ContinueWith(_ =>
@@ -573,7 +589,6 @@
         }
     }
 
-
     private void NavigateToProfile()
     {
         Navigation.NavigateTo("/profile");
@@ -593,4 +608,5 @@
             errorMessage = "Error during logout: " + ex.Message;
         }
     }
+
 }
