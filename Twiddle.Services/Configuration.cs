@@ -8,5 +8,6 @@ public static class Configuration
     public static void ConfigureServices(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IUserService, UserService>();
+        serviceCollection.AddSingleton<ITwidService, TwidService>();
     }
 }

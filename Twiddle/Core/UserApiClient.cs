@@ -3,11 +3,11 @@ using Twiddle.Models;
 
 namespace Twiddle.Core;
 
-public class TwiddleApiClient
+public class UserApiClient
 {
     private readonly HttpClient _httpClient;
 
-    public TwiddleApiClient()
+    public UserApiClient()
     {
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri(Constants.ClientBaseAddress);
