@@ -19,11 +19,14 @@ public static class Configuration
     private static void ConfigureDao(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IUserDao, UserDao>();
+        serviceCollection.AddSingleton<ITwidDao, TwidDao>();
     }
 
     private static void ConfigureMappers(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IMapper<UserModel, User>, UserMapper>();
         serviceCollection.AddSingleton<IMapper<User, UserModel>, UserModelMapper>();
+        serviceCollection.AddSingleton<IMapper<TwidModel, Twid>, TwidMapper>();
+        serviceCollection.AddSingleton<IMapper<Twid, TwidModel>, TwidModelMapper>();
     }
 }

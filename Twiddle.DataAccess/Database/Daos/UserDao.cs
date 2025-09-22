@@ -36,7 +36,7 @@ internal class UserDao(IMapper<UserModel, User> _userMapper, IMapper<User, UserM
         await using var context = new TwiddleDb();
         
         var usersToReturn = context.Users.ToList();
-        return usersToReturn.Select(u => _userModelMapper.Map(u)).ToList();
+        return usersToReturn.Select(_userModelMapper.Map).ToList();
     }
 
     public async Task UpdateAsync(UserModel model)

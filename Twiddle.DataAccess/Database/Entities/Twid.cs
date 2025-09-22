@@ -17,5 +17,5 @@ public class Twid
     public string Text { get; set; } = string.Empty;
 
     [Required]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
 }
