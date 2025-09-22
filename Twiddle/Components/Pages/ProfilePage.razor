@@ -1,0 +1,273 @@
+﻿@page "/profile"
+@using Twiddle.Models
+@using System.Text.Json
+@inject NavigationManager Navigation
+@inject Twiddle.Core.TwidApiClient TwidApiClient
+@inject Twiddle.Core.UserApiClient UserApiClient
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@rendermode InteractiveServer
+
+<div class="profile-container">
+    <!-- Header Section -->
+    <header class="profile-header">
+        <div class="header-left">
+            <img src="Images/Twiddle_Logo.png" alt="Twiddle Logo" class="header-logo"/>
+            <h1>My Profile</h1>
+        </div>
+        <div class="header-right">
+            <button class="back-btn" @onclick="NavigateBack">← Back</button>
+            <button class="logout-btn" @onclick="HandleLogout">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- User Info -->
+        <div class="user-info-card">
+            <h2>@currentUser?.Name</h2>
+            <p><strong>Email:</strong> @currentUser?.Email</p>
+            <p><strong>Member since:</strong> @currentUser?.CreatedAt.ToString("MMMM dd, yyyy")</p>
+        </div>
+
+        <!-- User Twids -->
+        <div class="twids-container">
+            <h3>My Twids</h3>
+
+            @if (isLoadingTwids)
+            {
+                <div class="loading">Loading your twids...</div>
+            }
+            else if (twids?.Any() == true)
+            {
+                @foreach (var twid in twids.OrderByDescending(t => t.CreatedAt))
+                {
+                    <div class="twid-card">
+                        <div class="twid-header">
+                            <span class="twid-date">@twid.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                        </div>
+                        <div class="twid-content">@twid.Text</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="no-twids"><p>You haven’t posted any twids yet.</p></div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        min-height: 100vh;
+        background: #fffbf0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .profile-header {
+        background: #ffffff;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        border-bottom: 1px solid #eee;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-logo {
+        height: 40px;
+        width: auto;
+    }
+
+    .header-left h1 {
+        color: #333;
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 600;
+    }
+
+    .header-right {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .back-btn, .logout-btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+        transition: background .3s, transform .2s;
+    }
+
+    .back-btn {
+        background: #FFB300;
+        color: #fff;
+    }
+
+    .back-btn:hover {
+        background: #FF8F00;
+        transform: translateY(-2px);
+    }
+
+    .logout-btn {
+        background: transparent;
+        color: #FFB300;
+        border: 1px solid #FFB300;
+    }
+
+    .logout-btn:hover {
+        background: #FFB300;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .main-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .user-info-card {
+        background: #fefdf8;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+    }
+
+    .user-info-card h2 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .user-info-card p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .twids-container {
+        background: #fefdf8;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .twids-container h3 {
+        color: #333;
+        margin: 0 0 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .twid-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #eee;
+        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.1);
+        transition: transform .2s, box-shadow .3s;
+    }
+
+    .twid-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(255, 179, 0, 0.2);
+    }
+
+    .twid-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .twid-date {
+        color: #666;
+        font-size: 12px;
+    }
+
+    .twid-content {
+        color: #333;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .loading, .no-twids {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+        font-size: 14px;
+    }
+</style>
+
+@code {
+    private UserModel? currentUser;
+    private List<TwidModel>? twids;
+    private bool isLoadingTwids = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userIdStr = await LocalStorage.GetItemAsStringAsync("userId");
+            if (!Guid.TryParse(userIdStr, out var userId))
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            var (userOk, userResp) = await UserApiClient.GetUserByIdAsync(userId);
+            if (userOk)
+            {
+                currentUser = JsonSerializer.Deserialize<UserModel>(userResp, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+
+            var (twidOk, twidResp) = await TwidApiClient.GetByUserIdAsync(userId);
+            if (twidOk)
+            {
+                twids = JsonSerializer.Deserialize<List<TwidModel>>(twidResp, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to load profile: " + ex.Message;
+        }
+        finally
+        {
+            isLoadingTwids = false;
+        }
+    }
+
+    private void NavigateBack() => Navigation.NavigateTo("/home");
+
+    private async Task HandleLogout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await LocalStorage.RemoveItemAsync("userEmail");
+        await LocalStorage.RemoveItemAsync("userId");
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+}

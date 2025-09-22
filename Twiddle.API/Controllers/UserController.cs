@@ -17,7 +17,8 @@ public class UserController(IUserService _userService, ITokenProvider _tokenProv
         {
             Name = request.Name,
             Email = request.Email,
-            Password = request.Password
+            Password = request.Password,
+            CreatedAt = DateTime.UtcNow
         };
 
         var result = await _userService.RegisterAsync(user);
