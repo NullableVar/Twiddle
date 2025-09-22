@@ -33,14 +33,14 @@
                 <EditForm Model="@newTwid" OnValidSubmit="@HandleCreateTwid" FormName="CreateTwidForm">
                     <DataAnnotationsValidator/>
                     <ValidationSummary/>
-
+                    
                     <div class="twid-input-container">
-                        <InputTextArea @bind-Value="newTwid.Text"
-                                       placeholder="Share your thoughts..."
+                        <InputTextArea @bind-Value="newTwid.Text" 
+                                       placeholder="Share your thoughts..." 
                                        class="twid-textarea"/>
                         <ValidationMessage For="@(() => newTwid.Text)"/>
                     </div>
-
+                    
                     <div class="twid-actions">
                         <span class="character-count">@(newTwid.Text?.Length ?? 0)/1024</span>
                         <button type="submit" class="twid-submit-btn" disabled="@isSubmitting">
@@ -76,7 +76,7 @@
             <!-- Twids Feed -->
             <div class="twids-container">
                 <h3>Latest Twids</h3>
-
+                
                 @if (isLoadingTwids)
                 {
                     <div class="loading">Loading twids...</div>
@@ -446,7 +446,7 @@
         {
             isLoadingTwids = true;
             var (success, response) = await TwidApiClient.GetAllAsync();
-
+            
             if (success)
             {
                 twids = JsonSerializer.Deserialize<List<TwidModel>>(response, new JsonSerializerOptions
@@ -477,17 +477,17 @@
             errorMessage = null;
             successMessage = null;
 
-            // 1. Get the current userId from LocalStorage
-            var userIdString = await LocalStorage.GetItemAsStringAsync("userId");
+            // 1. Get the current user from LocalStorage
+            var email = await LocalStorage.GetItemAsStringAsync("userEmail");
 
-            if (string.IsNullOrWhiteSpace(userIdString) || !Guid.TryParse(userIdString, out var userId))
+            if (string.IsNullOrWhiteSpace(email))
             {
                 errorMessage = "Could not find user information. Please login again.";
                 return;
             }
 
             // 2. Fetch the full UserModel from API
-            var (userSuccess, userResponse) = await UserApiClient.GetUserByIdAsync(userId);
+            var (userSuccess, userResponse) = await UserApiClient.GetUserByEmailAsync(email);
 
             if (!userSuccess)
             {
@@ -510,7 +510,7 @@
             var twidModel = new TwidModel
             {
                 Id = Guid.NewGuid(),
-                UserId = user.Id, // ✅ actual user ID from LocalStorage / API
+                UserId = user.Id,              // ✅ actual user ID
                 Text = newTwid.Text,
                 CreatedAt = DateTime.UtcNow
             };
@@ -544,6 +544,7 @@
         }
     }
 
+
     private void NavigateToProfile()
     {
         Navigation.NavigateTo("/profile");
@@ -562,5 +563,4 @@
             errorMessage = "Error during logout: " + ex.Message;
         }
     }
-
 }
