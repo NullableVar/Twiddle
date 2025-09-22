@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<UserApiClient>();
+builder.Services.AddScoped<TwidApiClient>();
 builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();

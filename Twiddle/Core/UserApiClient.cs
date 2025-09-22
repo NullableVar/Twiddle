@@ -44,9 +44,8 @@ public class UserApiClient
     {
         if (string.IsNullOrWhiteSpace(email))
             return (false, "Email must be provided");
-
-        var encoded = System.Net.WebUtility.UrlEncode(email.Trim());
-        var response = await _httpClient.GetAsync($"user/by-email?email={encoded}");
+        
+        var response = await _httpClient.GetAsync($"user/by-email?email={email}");
         var content = await response.Content.ReadAsStringAsync();
 
         return (response.IsSuccessStatusCode, content);
