@@ -18,7 +18,7 @@
         <div class="header-right">
             <button class="profile-btn" @onclick="NavigateToProfile">
                 <span class="profile-icon">👤</span>
-                My Profile
+                @currentUsername
             </button>
             <button class="logout-btn" @onclick="HandleLogout">
                 Logout
@@ -61,16 +61,12 @@
         <div class="feed-content">
             @if (!string.IsNullOrEmpty(errorMessage))
             {
-                <div class="error-message">
-                    @errorMessage
-                </div>
+                <div class="error-message">@errorMessage</div>
             }
 
             @if (!string.IsNullOrEmpty(successMessage))
             {
-                <div class="success-message">
-                    @successMessage
-                </div>
+                <div class="success-message">@successMessage</div>
             }
 
             <!-- Twids Feed -->
@@ -87,7 +83,9 @@
                     {
                         <div class="twid-card">
                             <div class="twid-header">
-                                <span class="twid-user">User: @twid.UserId</span>
+                                <span class="twid-user">
+                                    User: @GetUsernameForTwid(twid.UserId)
+                                </span>
                                 <span class="twid-date">@twid.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
                             </div>
                             <div class="twid-content">
@@ -418,7 +416,8 @@
     private string? successMessage;
     private bool isSubmitting;
     private bool isLoadingTwids = true;
-    private string? currentUserEmail;
+    private string? currentUsername;
+    private Dictionary<Guid, string> userCache = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -431,7 +430,24 @@
                 return;
             }
 
-            currentUserEmail = await LocalStorage.GetItemAsStringAsync("userEmail");
+            var userIdStr = await LocalStorage.GetItemAsStringAsync("userId");
+            if (Guid.TryParse(userIdStr, out var userId))
+            {
+                var (success, response) = await UserApiClient.GetUserByIdAsync(userId);
+                if (success)
+                {
+                    var user = JsonSerializer.Deserialize<UserModel>(response, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    if (user != null)
+                    {
+                        currentUsername = user.Name;
+                        userCache[user.Id] = user.Name;
+                    }
+                }
+            }
+
             await LoadTwids();
         }
         catch (Exception ex)
@@ -453,6 +469,28 @@
                 {
                     PropertyNameCaseInsensitive = true
                 });
+
+                if (twids != null)
+                {
+                    foreach (var t in twids)
+                    {
+                        if (!userCache.ContainsKey(t.UserId))
+                        {
+                            var (ok, resp) = await UserApiClient.GetUserByIdAsync(t.UserId);
+                            if (ok)
+                            {
+                                var u = JsonSerializer.Deserialize<UserModel>(resp, new JsonSerializerOptions
+                                {
+                                    PropertyNameCaseInsensitive = true
+                                });
+                                if (u != null)
+                                {
+                                    userCache[u.Id] = u.Name;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             else
             {
@@ -469,6 +507,14 @@
         }
     }
 
+    private string GetUsernameForTwid(Guid userId)
+    {
+        if (userCache.TryGetValue(userId, out var username))
+            return username;
+
+        return "Unknown User";
+    }
+
     private async Task HandleCreateTwid()
     {
         try
@@ -477,40 +523,22 @@
             errorMessage = null;
             successMessage = null;
 
-            // 1. Get the current user from LocalStorage
-            var email = await LocalStorage.GetItemAsStringAsync("userEmail");
-
-            if (string.IsNullOrWhiteSpace(email))
+            var userIdStr = await LocalStorage.GetItemAsStringAsync("userId");
+            if (!Guid.TryParse(userIdStr, out var userId))
             {
                 errorMessage = "Could not find user information. Please login again.";
                 return;
             }
 
-            // 2. Fetch the full UserModel from API
-            var (userSuccess, userResponse) = await UserApiClient.GetUserByEmailAsync(email);
-
-            if (!userSuccess)
+            if (!string.IsNullOrEmpty(currentUsername))
             {
-                errorMessage = "Failed to retrieve user: " + userResponse;
-                return;
+                userCache[userId] = currentUsername;
             }
 
-            var user = System.Text.Json.JsonSerializer.Deserialize<UserModel>(
-                userResponse,
-                new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            );
-
-            if (user == null)
-            {
-                errorMessage = "User not found.";
-                return;
-            }
-
-            // 3. Create Twid with real UserId
             var twidModel = new TwidModel
             {
                 Id = Guid.NewGuid(),
-                UserId = user.Id,              // ✅ actual user ID
+                UserId = userId,
                 Text = newTwid.Text,
                 CreatedAt = DateTime.UtcNow
             };
@@ -521,6 +549,7 @@
             {
                 successMessage = "Twid posted successfully!";
                 newTwid = new TwidViewModel();
+            
                 await LoadTwids();
 
                 _ = Task.Delay(3000).ContinueWith(_ =>
@@ -556,6 +585,7 @@
         {
             await LocalStorage.RemoveItemAsync("authToken");
             await LocalStorage.RemoveItemAsync("userEmail");
+            await LocalStorage.RemoveItemAsync("userId");
             Navigation.NavigateTo("/login", forceLoad: true);
         }
         catch (Exception ex)

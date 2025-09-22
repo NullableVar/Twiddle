@@ -47,7 +47,7 @@
 @code {
     private UserModel loginModel = new();
     private string? errorMessage;
-
+    
     private async Task HandleLogin()
     {
         var (success, tokenOrMessage) = await ApiClient.LoginAsync(loginModel);
@@ -55,10 +55,25 @@
         if (success)
         {
             await LocalStorage.SetItemAsStringAsync("authToken", tokenOrMessage);
+
             if (!string.IsNullOrWhiteSpace(loginModel.Email))
             {
                 await LocalStorage.SetItemAsStringAsync("userEmail", loginModel.Email);
+
+                var (userSuccess, userResponse) = await ApiClient.GetUserByEmailAsync(loginModel.Email);
+                if (userSuccess)
+                {
+                    var user = System.Text.Json.JsonSerializer.Deserialize<UserModel>(
+                        userResponse,
+                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                    );
+                    if (user != null)
+                    {
+                        await LocalStorage.SetItemAsStringAsync("userId", user.Id.ToString());
+                    }
+                }
             }
+
             Navigation.NavigateTo("/home", forceLoad: true);
         }
         else
