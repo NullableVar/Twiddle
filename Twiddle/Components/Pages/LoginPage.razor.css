@@ -1,14 +1,4 @@
-﻿body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #fffbf0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-.main-container {
+﻿.main-container {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -140,24 +130,8 @@ button:active {
     }
 
     .logo-card {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(255, 179, 0, 0.15);
         width: 150px;
         height: 150px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-shrink: 0;
-    }
-
-    .logo-card img {
-        width: 100%;
-        height: auto;
-        max-width: 120px;
-        max-height: 120px;
-        object-fit: contain;
     }
 
     .login-container {
